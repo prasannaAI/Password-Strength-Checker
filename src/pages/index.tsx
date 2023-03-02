@@ -29,6 +29,9 @@ const HomePage = () => {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
          />
+         <p>
+          wkjdbw
+         </p>
           {result && (
           <div>
               <div>
