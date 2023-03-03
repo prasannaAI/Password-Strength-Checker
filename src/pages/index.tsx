@@ -36,7 +36,7 @@ const HomePage = () => {
     setPasswordVisible(!passwordVisible);
   }
   const getPasswordInputType = () => {
-    return passwordVisible ? 'text' : 'password';
+    return passwordVisible ? 'password'  : 'text';
   }
 
 
@@ -85,17 +85,15 @@ const HomePage = () => {
                                onClick={togglePasswordVisibility}
              />
            </div>
-<div className='flex place-content-center'>
-
-             {result && (
-                 <div className="collar-bar" style={{ width: "45%" }}>
-                   {[...Array(9)].map((_, i) => (
-                       <div key={i} className="bar-segment" style={{ backgroundColor: getColor(i + 1) }}></div>
-                   ))}
-                 </div>
-             )}
-
-</div>
+            <div className='w-[49.5%] m-auto h-4  rounded-[1rem]  p-[0.25rem] overflow-hidden '>
+                {result && (
+                    <div className="collar-bar " style={{ width: '100%' }}>
+                        {[...Array(9)].map((_, i) => (
+                          <div key={i} className="bar-segment" style={{ backgroundColor: getColor(i + 1) }}></div>
+                          ))}
+                    </div>
+                )}
+            </div>
 
          </div>
 
@@ -112,31 +110,35 @@ const HomePage = () => {
 
       <style jsx>{`
         .collar-bar {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-  height: 4px;
-  margin-top: 8px;
-  background-color: white;
-  gap: 10px;
- align-items: center;
+                display: flex;
+                justify-content: space-between;
+                width: 100%;
+                height: 4px;
+                background-color:#a7b9c66e;
+                gap: 10px;
+                align-items: center;
+                margin: 2rem,
+                overflow: hidden;
+                border-radius: 1rem;
   
-}
+        }
 
-.bar-segment {
-  width: 50%;
-  height: 100%;
-}
+        .bar-segment {
+          width: 50%;
+          height: 100%;
+          border-radius: 1rem;
+          overflow: hidden;
+        }
 
-input:focus ~ .collar-bar {
-  opacity: 1;
-  transition: opacity 0.3s ease-in-out;
-}
+        input:focus ~ .collar-bar {
+          opacity: 1;
+          transition: opacity 0.3s ease-in-out;
+        }
 
-input:not(:focus) ~ .collar-bar {
-  opacity: 0;
-  transition: opacity 0.3s ease-in-out;
-}
+        input:not(:focus) ~ .collar-bar {
+          opacity: 0;
+          transition: opacity 0.3s ease-in-out;
+        }
 
       `}</style>
 
