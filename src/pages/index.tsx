@@ -1,18 +1,46 @@
 import Head from 'next/head'
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import calculatePasswordStrength from "@/utils/crackTime";
-import {ZxcvbnResult} from "@zxcvbn-ts/core";
+import { ZxcvbnResult } from "@zxcvbn-ts/core";
+import LockIcon from '@mui/icons-material/Lock';
+import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 
 const HomePage = () => {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [result, setResult] = useState<ZxcvbnResult | null>(null);
 
-    const [searchTerm, setSearchTerm] = useState('');
-    const [result, setResult] = useState<ZxcvbnResult|null>(null)
+  const [passwordVisible, setPasswordVisible] = useState(true);
 
-    useEffect(() => {
-        if(searchTerm?.length > 0) {
-            calculatePasswordStrength(searchTerm).then((r) => setResult(r));
-        }
-    }, [searchTerm]);
+  useEffect(() => {
+    if (searchTerm?.length > 0) {
+      calculatePasswordStrength(searchTerm).then((r) => setResult(r));
+    }
+  }, [searchTerm]);
+
+
+
+
+  const getColor = (segment: number): string => {
+    if (!result) return "transparent";
+    const scoreFraction = result.score / 4;
+    if (segment <= scoreFraction * 9) {
+      if (scoreFraction <= 0.25) return "red";
+      else if (scoreFraction <= 0.5) return "orange";
+      else if (scoreFraction <= 0.75) return "yellow";
+      else return "green";
+    } else {
+      return "transparent";
+    }
+  };
+  const togglePasswordVisibility = () => {
+    setPasswordVisible(!passwordVisible);
+  }
+  const getPasswordInputType = () => {
+    return passwordVisible ? 'text' : 'password';
+  }
+
+
+
 
   return (
     <>
@@ -22,23 +50,97 @@ const HomePage = () => {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main>
-         <input
-            type="password"
-            placeholder="Enter Your Password"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-         />
-         <p>
-          wkjdbw
-         </p>
-          {result && (
-          <div>
-              <div>
-                  {result.score/5 * 100}% ({result.score}/5)
-              </div>
-          </div>)}
+<body >
+
+<header className="bg-[#273441] w-full h-[4rem]">
+  <p>
+    traboda
+  </p>
+</header>
+
+       <main>
+         <div className=" border border-2 border-black w-[80%] m-auto mt-[70px] mb-[30px] ">
+           <div>
+             <p className="text-center font-bold text-[3rem] text-[#273441] ">
+             HOW SECURE IS YOUR PASSWORD ?
+             </p>
+               <p className="text-center text-[1.5rem] ">
+                   check your password strength here
+               </p>
+
+           </div>
+           <div className="flex place-content-center mt-[3rem] relative  " >
+             <LockIcon className="border-t-2  border-l-2 border-b-2  border-black" style={{width:"34px",height:"48px"}}/>
+             <input className="border-t-2 border-black border-b-2 pl-[1rem]"
+
+                 style={{ width:"45%",height:"3rem",outline:"none"}}
+                    type={getPasswordInputType()}
+                 placeholder="Enter Your Password"
+                 value={searchTerm}
+                 onChange={(e) => setSearchTerm(e.target.value)}
+
+
+             />
+             <RemoveRedEyeIcon className="border-t-2  border-r-2 border-b-2  border-black " style={{width:"34px",height:"48px",paddingRight:"0.5rem",cursor: "pointer"}}
+                               onClick={togglePasswordVisibility}
+             />
+           </div>
+<div className='flex place-content-center'>
+
+             {result && (
+                 <div className="collar-bar" style={{ width: "45%" }}>
+                   {[...Array(9)].map((_, i) => (
+                       <div key={i} className="bar-segment" style={{ backgroundColor: getColor(i + 1) }}></div>
+                   ))}
+                 </div>
+             )}
+
+</div>
+
+         </div>
+
+
+
+
+{/*{result && (*/}
+{/*          <div>*/}
+{/*              <div>*/}
+{/*                  {result.score/5 * 100}% ({result.score}/5)*/}
+{/*              </div>*/}
+{/*          </div>)}*/}
       </main>
+
+      <style jsx>{`
+        .collar-bar {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  height: 4px;
+  margin-top: 8px;
+  background-color: white;
+  gap: 10px;
+ align-items: center;
+  
+}
+
+.bar-segment {
+  width: 50%;
+  height: 100%;
+}
+
+input:focus ~ .collar-bar {
+  opacity: 1;
+  transition: opacity 0.3s ease-in-out;
+}
+
+input:not(:focus) ~ .collar-bar {
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+}
+
+      `}</style>
+
+</body>
     </>
   )
 };
