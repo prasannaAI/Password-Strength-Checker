@@ -307,7 +307,7 @@ const HomePage = () => {
               background-color: #a7b9c66e;
               gap: 10px;
               align-items: center;
-              margin: 2rem,
+              margin: 2rem;
               overflow: hidden;
               border-radius: 1rem;
 
