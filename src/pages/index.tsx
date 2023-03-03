@@ -4,6 +4,7 @@ import calculatePasswordStrength from "@/utils/crackTime";
 import { ZxcvbnResult } from "@zxcvbn-ts/core";
 import LockIcon from '@mui/icons-material/Lock';
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
+import DoneIcon from '@mui/icons-material/Done';
 
 const HomePage = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -11,11 +12,49 @@ const HomePage = () => {
 
   const [passwordVisible, setPasswordVisible] = useState(true);
 
+  const [containsLowercase, setContainsLowercase] = useState(false);
+  const [containsUppercase, setContainsUppercase] = useState(false);
+  const [containsNumber, setContainsNumber] = useState(false);
+  const [containsSymbol, setContainsSymbol] = useState(false);
+  // const [isPasswordvalid, setIsPasswordvalid] = useState(false);
+
+
+  const checkValidity = (input: string): boolean => {
+    const valid =input.length >= 8 && /[A-Z]/.test(input) && /[\W_]/.test(input)&&/[a-z]/.test(input);
+    return valid;
+  }
+  const lowercase = (input: string): boolean => {
+    const lowercaseRegex = /[a-z]/;
+    return lowercaseRegex.test(input);
+  }
+
+  const checkUppercase = (input: string): boolean => {
+    const uppercaseRegex = /[A-Z]/;
+    return uppercaseRegex.test(input);
+  }
+
+  const checkNumber= (input: string): boolean => {
+    const NumberRegex =  /\d/;
+    return NumberRegex.test(input);
+  }
+
+  const checkSymbols= (input: string): boolean => {
+    const SymbolRegex = /[!@#$%^&*(),.?":{}|<>]/;
+    return SymbolRegex.test(input);
+  }
+
   useEffect(() => {
-    if (searchTerm?.length > 0) {
-      calculatePasswordStrength(searchTerm).then((r) => setResult(r));
+    if(searchTerm?.length > 0) {
+      calculatePasswordStrength(searchTerm).then((r) => {
+        setResult(r);
+        setContainsUppercase(/[A-Z]/.test(searchTerm));
+        setContainsLowercase(/[a-z]/.test(searchTerm));
+        setContainsNumber(/\d/.test(searchTerm));
+        setContainsSymbol(/[!@#$%^&*(),.?":{}|<>+=]/.test(searchTerm));
+      });
     }
   }, [searchTerm]);
+
 
 
 
@@ -40,7 +79,7 @@ const HomePage = () => {
   }
 
 
-
+console.log({result})
 
   return (
     <>
@@ -94,6 +133,63 @@ const HomePage = () => {
                     </div>
                 )}
             </div>
+           <div className=' w-[51%] m-auto mt-[10px] grid grid-cols-[3fr_repeat(4,1fr)] gap-[50px]'>
+           <div >
+           <p className=" text-[14px]">Charecters present {searchTerm.length}</p>
+           </div>
+             <div className="grid grid-cols-2 inline">
+               <div>
+               {containsLowercase && (
+                   <div>
+                       <DoneIcon style={{position:"absolute",color: "green"}}/>
+                   </div>)}
+               </div>
+               <div>
+               <p style={{fontSize:"12px",position:"relative",top:"2px"}}>Lowercase</p>
+               </div>
+             </div>
+
+             <div className="grid grid-cols-2 inline">
+<div>
+             {containsUppercase && (
+                 <div>
+                    <DoneIcon style={{position:"absolute",color: "green"}}/>
+                 </div>)}
+</div>
+               <div>
+                 <p style={{fontSize:"12px",position:"relative",top:"2px"}}>Uppercase</p>
+               </div>
+             </div>
+
+             <div className="grid grid-cols-2 inline">
+               <div>
+             {containsNumber && (
+                 <div>
+                     <DoneIcon style={{position:"absolute",color: "green"}}/>
+                 </div>)}
+               </div>
+                 <div>
+                   <p style={{fontSize:"12px",position:"relative",top:"2px"}}>Number</p>
+                 </div>
+               </div>
+
+             <div className="grid grid-cols-2 inline relative right-[18px]">
+               <div>
+             {containsSymbol && (
+                 <div>
+                     <DoneIcon style={{position:"absolute",color: "green"}}/>
+                 </div>)}
+               </div>
+  <div>
+    <p style={{fontSize:"12px",position:"relative",top:"2px"}}>Symbol</p>
+  </div>
+             </div>
+
+           </div>
+
+
+
+
 
          </div>
 
